@@ -1,1 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Generador de Señales de Trading</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        select, button { padding: 5px; }
+        .resultado { margin-top: 20px; }
+        .alcista { color: green; }
+        .bajista { color: red; }
+    </style>
+</head>
+<body>
+    <h1>Generador de Señales de Trading</h1>
+    <form method="POST">
+        <label for="activo">Selecciona un activo:</label>
+        <select name="activo" id="activo">
+            {% for activo in activos %}
+            <option value="{{ activo }}">{{ activo }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Generar Señal</button>
+    </form>
 
+    {% if resultado %}
+    <div class="resultado">
+        <h2>{{ resultado.simbolo }}</h2>
+        <p>Tendencia: <span class="{{ 'alcista' if resultado.tendencia == 'Alcista' else 'bajista' }}">{{ resultado.tendencia }}</span></p>
+        <p>{{ resultado.orden }}</p>
+        <p>Probabilidad: {{ resultado.probabilidad }}%</p>
+        <p>Ganancia: {{ resultado.ganancia|round(2) }}%</p>
+        {% if resultado.tiempo_estimado %}
+        <p>{{ resultado.tiempo_estimado }}</p>
+        {% endif %}
+        {% if resultado.oco %}
+        <p>Orden OCO Sugerida:</p>
+        <ul>
+            <li>{{ resultado.oco.limit_order }}</li>
+            <li>{{ resultado.oco.stop }}</li>
+            <li>{{ resultado.oco.limit_stop }}</li>
+        </ul>
+        {% endif %}
+    </div>
+    {% endif %}
+</body>
+</html>
